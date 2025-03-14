@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bosa Kitchen - Order Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Import the same root variables and basic styles from dashboard.html */
+        :root {
+            --primary-color: #264653;
+            --secondary-color: #f4a261;
+            --accent-color: #e9c46a;
+            --text-color: #2a2a2a;
+            --light-bg: #f9f9f9;
+            --white: #ffffff;
+            --danger: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            display: flex;
+        }
+
+        /* Reuse sidebar styles from dashboard.html */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 2rem 1rem;
+            position: fixed;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            width: calc(100% - 250px);
+        }
+
+        /* Order specific styles */
+        .filters {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .filter-group select, .filter-group input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .order-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .order-id {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .order-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .order-details {
+            margin-bottom: 1rem;
+        }
+
+        .customer-info {
+            margin-bottom: 1rem;
+        }
+
+        .customer-info p {
+            margin: 0.3rem 0;
+            color: var(--text-color);
+        }
+
+        .order-items {
+            margin-bottom: 1rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background-color: var(--warning);
+            color: var(--text-color);
+        }
+
+        .status-processing {
+            background-color: var(--info);
+            color: var(--white);
+        }
+
+        .status-completed {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .status-cancelled {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--primary-color);
+            background-color: var(--white);
+            color: var(--primary-color);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            width: 90%;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="../menu/Bosa Logo.jpeg" alt="Bosa Kitchen Logo">
+            <h2>Admin Panel</h2>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="orders.html" class="nav-link active">
+                    <i class="fas fa-shopping-cart"></i>
+                    Orders
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="menu.html" class="nav-link">
+                    <i class="fas fa-utensils"></i>
+                    Menu Items
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="users.html" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    Users
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Order Management</h1>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="status-filter">Status</label>
+                <select id="status-filter">
+                    <option value="">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="date-filter">Date Range</label>
+                <input type="date" id="date-from" aria-label="From Date" title="From Date">
+                <input type="date" id="date-to" aria-label="To Date" title="To Date">
+            </div>
+            <div class="filter-group">
+                <label for="search">Search</label>
+                <input type="text" id="search" placeholder="Order ID or Customer Name">
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- Orders Grid -->
+        <div class="order-grid" id="orders-container">
+            <!-- Orders will be populated dynamically -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be populated dynamically -->
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="order-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Order Details</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="order-details-content">
+                <!-- Order details will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('authToken');
+            const userRole = localStorage.getItem('userRole');
+
+            if (!token || userRole !== 'admin') {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            loadOrders();
+        });
+
+        // Load orders
+        async function loadOrders(page = 1, filters = {}) {
+            try {
+                const queryParams = new URLSearchParams({
+                    page,
+                    ...filters
+                });
+
+                const response = await fetch(`/api/admin/orders?${queryParams}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayOrders(data.orders);
+                    updatePagination(data.totalPages, page);
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Display orders
+        function displayOrders(orders) {
+            const container = document.getElementById('orders-container');
+            container.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">#${order.id}</span>
+                        <span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span>
+                    </div>
+                    <div class="order-details">
+                        <div class="customer-info">
+                            <p><strong>Customer:</strong> ${order.customer_name}</p>
+                            <p><strong>Date:</strong> ${new Date(order.order_date).toLocaleDateString()}</p>
+                            <p><strong>Phone:</strong> ${order.phone_number}</p>
+                        </div>
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <span>${item.quantity}x ${item.name}</span>
+                                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="order-total">
+                            <span>Total:</span>
+                            <span>$${order.total.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn btn-secondary" onclick="viewOrderDetails(${order.id})">View Details</button>
+                        ${order.status === 'pending' ? `
+                            <button class="btn btn-primary" onclick="updateOrderStatus(${order.id}, 'processing')">Process</button>
+                        ` : ''}
+                        ${order.status === 'processing' ? `
+                            <button class="btn btn-primary" onclick="updateOrderStatus(${order.id}, 'completed')">Complete</button>
+                        ` : ''}
+                        ${['pending', 'processing'].includes(order.status) ? `
+                            <button class="btn btn-danger" onclick="updateOrderStatus(${order.id}, 'cancelled')">Cancel</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update order status
+        async function updateOrderStatus(orderId, status) {
+            try {
+                const response = await fetch(`/api/admin/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (response.ok) {
+                    loadOrders();
+                }
+            } catch (error) {
+                console.error('Error updating order status:', error);
+            }
+        }
+
+        // View order details
+        async function viewOrderDetails(orderId) {
+            try {
+                const response = await fetch(`/api/admin/orders/${orderId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const order = await response.json();
+                    displayOrderDetails(order);
+                    document.getElementById('order-modal').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading order details:', error);
+            }
+        }
+
+        // Display order details in modal
+        function displayOrderDetails(order) {
+            const content = document.getElementById('order-details-content');
+            content.innerHTML = `
+                <div class="order-details">
+                    <h3>Order #${order.id}</h3>
+                    <p><strong>Status:</strong> <span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span></p>
+                    <p><strong>Order Date:</strong> ${new Date(order.order_date).toLocaleString()}</p>
+                    
+                    <h4>Customer Information</h4>
+                    <p><strong>Name:</strong> ${order.customer_name}</p>
+                    <p><strong>Email:</strong> ${order.email}</p>
+                    <p><strong>Phone:</strong> ${order.phone_number}</p>
+                    <p><strong>Address:</strong> ${order.delivery_address}</p>
+                    
+                    <h4>Order Items</h4>
+                    ${order.items.map(item => `
+                        <div class="order-item">
+                            <span>${item.quantity}x ${item.name}</span>
+                            <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                    
+                    <div class="order-total">
+                        <span>Subtotal:</span>
+                        <span>$${order.subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="order-total">
+                        <span>Delivery Fee:</span>
+                        <span>$${order.delivery_fee.toFixed(2)}</span>
+                    </div>
+                    <div class="order-total">
+                        <span>Total:</span>
+                        <span>$${order.total.toFixed(2)}</span>
+                    </div>
+                    
+                    <h4>Payment Information</h4>
+                    <p><strong>Payment Method:</strong> ${order.payment_method}</p>
+                    <p><strong>Payment Status:</strong> ${order.payment_status}</p>
+                    
+                    <div class="order-actions">
+                        ${order.status === 'pending' ? `
+                            <button class="btn btn-primary" onclick="updateOrderStatus(${order.id}, 'processing')">Process Order</button>
+                        ` : ''}
+                        ${order.status === 'processing' ? `
+                            <button class="btn btn-primary" onclick="updateOrderStatus(${order.id}, 'completed')">Complete Order</button>
+                        ` : ''}
+                        ${['pending', 'processing'].includes(order.status) ? `
+                            <button class="btn btn-danger" onclick="updateOrderStatus(${order.id}, 'cancelled')">Cancel Order</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('order-modal').style.display = 'none';
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const filters = {
+                status: document.getElementById('status-filter').value,
+                dateFrom: document.getElementById('date-from').value,
+                dateTo: document.getElementById('date-to').value,
+                search: document.getElementById('search').value
+            };
+            loadOrders(1, filters);
+        }
+
+        // Update pagination
+        function updatePagination(totalPages, currentPage) {
+            const pagination = document.getElementById('pagination');
+            let pages = '';
+            
+            if (currentPage > 1) {
+                pages += `<button class="page-btn" onclick="loadOrders(${currentPage - 1})">Previous</button>`;
+            }
+            
+            for (let i = 1; i <= totalPages; i++) {
+                pages += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="loadOrders(${i})">${i}</button>`;
+            }
+            
+            if (currentPage < totalPages) {
+                pages += `<button class="page-btn" onclick="loadOrders(${currentPage + 1})">Next</button>`;
+            }
+            
+            pagination.innerHTML = pages;
+        }
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userRole');
+            window.location.href = '../login.html';
+        });
+    </script>
+</body>
+</html> 
