@@ -582,6 +582,388 @@
             font-weight: bold;
             color: var(--primary-color);
         }
+
+        .about-section {
+            padding: 4rem 2rem;
+            background-color: var(--white);
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-content {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .about-features {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .about-features li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .about-features i {
+            color: var(--secondary-color);
+        }
+
+        .about-image {
+            flex: 1;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+            }
+
+            .about-image img {
+                height: 300px;
+            }
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 2rem;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .hero-cta:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .special-offers-section {
+            padding: 4rem 2rem;
+            background-color: var(--light-bg);
+        }
+
+        .offers-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .offer-card {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .offer-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 50%;
+            font-weight: bold;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .offer-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .offer-card p {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .offer-period {
+            display: block;
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .recommendations-section {
+            padding: 4rem 2rem;
+            background-color: var(--white);
+        }
+
+        .recommendations-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .recommendation-card {
+            background-color: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recommendation-image {
+            position: relative;
+            height: 250px;
+        }
+
+        .recommendation-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chef-choice {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .recommendation-content {
+            padding: 1.5rem;
+        }
+
+        .recommendation-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .recommendation-content p {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .recommendation-price {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .order-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .order-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .location-section {
+            padding: 4rem 2rem;
+            background-color: var(--light-bg);
+        }
+
+        .location-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .map-container {
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        .location-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .info-card {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .info-card i {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .info-card p {
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .recommendations-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .drinks-section {
+            padding: 4rem 2rem;
+            background-color: var(--white);
+        }
+
+        .drinks-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .drinks-category {
+            margin-bottom: 3rem;
+        }
+
+        .drinks-category h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .drinks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .drink-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background-color: var(--white);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .drink-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .drink-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .drink-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .drink-add-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .drink-add-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .drink-details h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+            font-size: 1.1rem;
+        }
+
+        .drink-size {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .drink-price {
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .drinks-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -632,11 +1014,39 @@
                 <div class="carousel-content">
                     <h2>Welcome to Bosa Kitchen</h2>
                     <p>Discover the rich flavors and authentic taste of African cuisine</p>
+                    <a href="#order-section" class="hero-cta">Order Now</a>
                 </div>
             </div>
             <div class="carousel-buttons">
                 <button onclick="prevSlide()" title="Previous slide"><i class="fas fa-chevron-left"></i></button>
                 <button onclick="nextSlide()" title="Next slide"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section id="special-offers" class="special-offers-section">
+        <div class="section-title">
+            <h2>Special Offers</h2>
+            <p>Exclusive Deals Just for You</p>
+        </div>
+        <div class="offers-container">
+            <div class="offer-card">
+                <div class="offer-badge">20% OFF</div>
+                <h3>Weekend Special</h3>
+                <p>Get 20% off on all main courses every weekend</p>
+                <span class="offer-period">Valid: Sat-Sun</span>
+            </div>
+            <div class="offer-card">
+                <div class="offer-badge">FREE</div>
+                <h3>Free Delivery</h3>
+                <p>On orders above $50</p>
+                <span class="offer-period">Limited Time Offer</span>
+            </div>
+            <div class="offer-card">
+                <div class="offer-badge">NEW</div>
+                <h3>Lunch Special</h3>
+                <p>Complete lunch menu at $25</p>
+                <span class="offer-period">Mon-Fri, 11AM-3PM</span>
             </div>
         </div>
     </section>
@@ -652,6 +1062,7 @@
                 <div class="menu-item-content">
                     <h3 class="menu-item-title">Jollof Rice & Chicken</h3>
                     <p class="menu-item-price">$15</p>
+                    <button class="menu-item-add" onclick="addToCart(1)">Add to Order</button>
                 </div>
             </div>
             <div class="menu-item">
@@ -659,6 +1070,7 @@
                 <div class="menu-item-content">
                     <h3 class="menu-item-title">Fried Rice and Turkey</h3>
                     <p class="menu-item-price">$15</p>
+                    <button class="menu-item-add" onclick="addToCart(2)">Add to Order</button>
                 </div>
             </div>
             <div class="menu-item">
@@ -666,6 +1078,7 @@
                 <div class="menu-item-content">
                     <h3 class="menu-item-title">Boiled Rice and Turkey Stew</h3>
                     <p class="menu-item-price">$12</p>
+                    <button class="menu-item-add" onclick="addToCart(3)">Add to Order</button>
                 </div>
             </div>
             <div class="menu-item">
@@ -673,6 +1086,7 @@
                 <div class="menu-item-content">
                     <h3 class="menu-item-title">Plantain and Beans</h3>
                     <p class="menu-item-price">$10</p>
+                    <button class="menu-item-add" onclick="addToCart(4)">Add to Order</button>
                 </div>
             </div>
             <div class="menu-item">
@@ -680,6 +1094,7 @@
                 <div class="menu-item-content">
                     <h3 class="menu-item-title">Sea Food Okro</h3>
                     <p class="menu-item-price">$20</p>
+                    <button class="menu-item-add" onclick="addToCart(5)">Add to Order</button>
                 </div>
             </div>
             <div class="menu-item">
@@ -687,6 +1102,105 @@
                 <div class="menu-item-content">
                     <h3 class="menu-item-title">Bolognese Spaghetti</h3>
                     <p class="menu-item-price">$15</p>
+                    <button class="menu-item-add" onclick="addToCart(6)">Add to Order</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="drinks" class="drinks-section">
+        <div class="section-title">
+            <h2>Beverages</h2>
+            <p>Refresh Yourself</p>
+        </div>
+        <div class="drinks-container">
+            <div class="drinks-category">
+                <h3>Soft Drinks</h3>
+                <div class="drinks-grid">
+                    <div class="drink-item">
+                        <img src="menu/beverages/coca-cola.jpg" alt="Coca-Cola" class="drink-image">
+                        <div class="drink-details">
+                            <h4>Coca-Cola</h4>
+                            <p class="drink-size">Can (355ml)</p>
+                            <p class="drink-price">$2.50</p>
+                            <button class="drink-add-btn" onclick="addToCart(7)">Add to Order</button>
+                        </div>
+                    </div>
+                    <div class="drink-item">
+                        <img src="menu/beverages/sprite.jpg" alt="Sprite" class="drink-image">
+                        <div class="drink-details">
+                            <h4>Sprite</h4>
+                            <p class="drink-size">Can (355ml)</p>
+                            <p class="drink-price">$2.50</p>
+                            <button class="drink-add-btn" onclick="addToCart(8)">Add to Order</button>
+                        </div>
+                    </div>
+                    <div class="drink-item">
+                        <img src="menu/beverages/fanta.jpg" alt="Fanta" class="drink-image">
+                        <div class="drink-details">
+                            <h4>Fanta</h4>
+                            <p class="drink-size">Can (355ml)</p>
+                            <p class="drink-price">$2.50</p>
+                            <button class="drink-add-btn" onclick="addToCart(9)">Add to Order</button>
+                        </div>
+                    </div>
+                    <div class="drink-item">
+                        <img src="menu/beverages/ginger-ale.jpg" alt="Ginger Ale" class="drink-image">
+                        <div class="drink-details">
+                            <h4>Ginger Ale</h4>
+                            <p class="drink-size">Can (355ml)</p>
+                            <p class="drink-price">$2.50</p>
+                            <button class="drink-add-btn" onclick="addToCart(10)">Add to Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="drinks-category">
+                <h3>African Drinks</h3>
+                <div class="drinks-grid">
+                    <div class="drink-item">
+                        <img src="menu/beverages/bissap.jpg" alt="Bissap (Hibiscus)" class="drink-image">
+                        <div class="drink-details">
+                            <h4>Bissap (Hibiscus)</h4>
+                            <p class="drink-size">Glass (500ml)</p>
+                            <p class="drink-price">$4.00</p>
+                            <button class="drink-add-btn" onclick="addToCart(11)">Add to Order</button>
+                        </div>
+                    </div>
+                    <div class="drink-item">
+                        <img src="menu/beverages/ginger-beer.jpg" alt="Ginger Beer" class="drink-image">
+                        <div class="drink-details">
+                            <h4>Ginger Beer</h4>
+                            <p class="drink-size">Bottle (330ml)</p>
+                            <p class="drink-price">$3.50</p>
+                            <button class="drink-add-btn" onclick="addToCart(12)">Add to Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="drinks-category">
+                <h3>Other Beverages</h3>
+                <div class="drinks-grid">
+                    <div class="drink-item">
+                        <img src="menu/beverages/water.jpg" alt="Bottled Water" class="drink-image">
+                        <div class="drink-details">
+                            <h4>Bottled Water</h4>
+                            <p class="drink-size">500ml</p>
+                            <p class="drink-price">$1.50</p>
+                            <button class="drink-add-btn" onclick="addToCart(13)">Add to Order</button>
+                        </div>
+                    </div>
+                    <div class="drink-item">
+                        <img src="menu/beverages/sparkling-water.jpg" alt="Sparkling Water" class="drink-image">
+                        <div class="drink-details">
+                            <h4>Sparkling Water</h4>
+                            <p class="drink-size">500ml</p>
+                            <p class="drink-price">$2.00</p>
+                            <button class="drink-add-btn" onclick="addToCart(14)">Add to Order</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -776,13 +1290,112 @@
         </div>
     </section>
 
+    <section id="about" class="about-section">
+        <div class="section-title">
+            <h2>About Bosa Kitchen</h2>
+            <p>Your Gateway to Authentic African Cuisine</p>
+        </div>
+        <div class="about-container">
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Welcome to Bosa Kitchen, where we bring the vibrant flavors and rich culinary traditions of Africa to your table. Our journey began with a simple mission: to share the authentic tastes of African cuisine while creating a warm, welcoming atmosphere for our guests.</p>
+                    <p>At Bosa Kitchen, every dish tells a story. Our expert chefs combine traditional recipes passed down through generations with locally sourced ingredients to create memorable dining experiences. From our signature Jollof Rice to our flavorful Sea Food Okro, each meal is crafted with passion and precision.</p>
+                    <p>We take pride in offering:</p>
+                    <ul class="about-features">
+                        <li><i class="fas fa-check"></i> Authentic African recipes and cooking techniques</li>
+                        <li><i class="fas fa-check"></i> Fresh, high-quality ingredients</li>
+                        <li><i class="fas fa-check"></i> Warm and inviting dining atmosphere</li>
+                        <li><i class="fas fa-check"></i> Exceptional customer service</li>
+                        <li><i class="fas fa-check"></i> Catering services for special events</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <img src="menu/menu1.jpg" alt="Bosa Kitchen Interior">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="chef-recommendations" class="recommendations-section">
+        <div class="section-title">
+            <h2>Chef's Recommendations</h2>
+            <p>Handpicked Favorites from Our Kitchen</p>
+        </div>
+        <div class="recommendations-container">
+            <div class="recommendation-card">
+                <div class="recommendation-image">
+                    <img src="menu/menu13.jpg" alt="Jollof Rice & Chicken">
+                    <div class="chef-choice">Chef's Choice</div>
+                </div>
+                <div class="recommendation-content">
+                    <h3>Jollof Rice & Chicken</h3>
+                    <p>Our signature dish - perfectly spiced rice cooked in rich tomato sauce, served with tender grilled chicken.</p>
+                    <div class="recommendation-price">$15</div>
+                    <button class="order-btn" onclick="addToCart(1)">Order Now</button>
+                </div>
+            </div>
+            <div class="recommendation-card">
+                <div class="recommendation-image">
+                    <img src="menu/menu7.jpg" alt="Sea Food Okro">
+                    <div class="chef-choice">Most Popular</div>
+                </div>
+                <div class="recommendation-content">
+                    <h3>Sea Food Okro</h3>
+                    <p>Fresh seafood medley in a traditional okro soup, perfectly seasoned with African spices.</p>
+                    <div class="recommendation-price">$20</div>
+                    <button class="order-btn" onclick="addToCart(5)">Order Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="location" class="location-section">
+        <div class="section-title">
+            <h2>Find Us</h2>
+            <p>Visit Us Today</p>
+        </div>
+        <div class="location-container">
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2798.6476411760897!2d-73.57277372346277!3d45.46089573655244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cc91093997b84bd%3A0x4c2d5251a9e46c91!2s855%20Av.%20Galt%2C%20Verdun%2C%20QC%20H4G%203G3!5e0!3m2!1sen!2sca!4v1710459163099!5m2!1sen!2sca"
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+            <div class="location-info">
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Address</h3>
+                    <p>855 Av. Galt</p>
+                    <p>Verdun, QC H4G 3G3</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Hours</h3>
+                    <p>Mon-Fri: 11:00 AM - 10:00 PM</p>
+                    <p>Sat-Sun: 12:00 PM - 11:00 PM</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-phone"></i>
+                    <h3>Contact</h3>
+                    <p>Phone: (438) 778-2127</p>
+                    <p>Email: info@bosakitchen.com</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Contact Us</h3>
-                <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                <p><i class="fas fa-phone"></i> (438) 778-2127</p>
                 <p><i class="fas fa-envelope"></i> info@bosakitchen.com</p>
-                <p><i class="fas fa-map-marker-alt"></i> 123 African Food Street, City, State</p>
+                <p><i class="fas fa-map-marker-alt"></i> 855 Av. Galt, Verdun, QC H4G 3G3</p>
             </div>
             <div class="footer-section">
                 <h3>Opening Hours</h3>
@@ -847,12 +1460,22 @@ function prevSlide() {
 
         // Menu items data structure
         const menuItems = [
+            // Main Courses
             { id: 1, name: 'Jollof Rice & Chicken', price: 15.00, category: 'Main Course', image: 'menu/menu13.jpg' },
             { id: 2, name: 'Fried Rice and Turkey', price: 15.00, category: 'Main Course', image: 'menu/menu16.jpg' },
             { id: 3, name: 'Boiled Rice and Turkey Stew', price: 12.00, category: 'Main Course', image: 'menu/menu5.jpg' },
             { id: 4, name: 'Plantain and Beans', price: 10.00, category: 'Main Course', image: 'menu/menu8.jpg' },
             { id: 5, name: 'Sea Food Okro', price: 20.00, category: 'Main Course', image: 'menu/menu7.jpg' },
-            { id: 6, name: 'Bolognese Spaghetti', price: 15.00, category: 'Main Course', image: 'menu/menu12.jpg' }
+            { id: 6, name: 'Bolognese Spaghetti', price: 15.00, category: 'Main Course', image: 'menu/menu12.jpg' },
+            // Beverages
+            { id: 7, name: 'Coca-Cola', price: 2.50, category: 'Soft Drinks', size: '355ml', image: 'menu/beverages/coca-cola.jpg' },
+            { id: 8, name: 'Sprite', price: 2.50, category: 'Soft Drinks', size: '355ml', image: 'menu/beverages/sprite.jpg' },
+            { id: 9, name: 'Fanta', price: 2.50, category: 'Soft Drinks', size: '355ml', image: 'menu/beverages/fanta.jpg' },
+            { id: 10, name: 'Ginger Ale', price: 2.50, category: 'Soft Drinks', size: '355ml', image: 'menu/beverages/ginger-ale.jpg' },
+            { id: 11, name: 'Bissap (Hibiscus)', price: 4.00, category: 'African Drinks', size: '500ml', image: 'menu/beverages/bissap.jpg' },
+            { id: 12, name: 'Ginger Beer', price: 3.50, category: 'African Drinks', size: '330ml', image: 'menu/beverages/ginger-beer.jpg' },
+            { id: 13, name: 'Bottled Water', price: 1.50, category: 'Other Beverages', size: '500ml', image: 'menu/beverages/water.jpg' },
+            { id: 14, name: 'Sparkling Water', price: 2.00, category: 'Other Beverages', size: '500ml', image: 'menu/beverages/sparkling-water.jpg' }
         ];
 
         // Shopping cart
@@ -863,19 +1486,22 @@ function prevSlide() {
             const menuGrid = document.querySelector('.menu-grid');
             menuGrid.innerHTML = '';
 
-            menuItems.forEach(item => {
-                const menuItemElement = document.createElement('div');
-                menuItemElement.className = 'menu-item';
-                menuItemElement.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="menu-item-content">
-                        <h3 class="menu-item-title">${item.name}</h3>
-                        <p class="menu-item-price">$${item.price.toFixed(2)}</p>
-                        <button class="menu-item-add" onclick="addToCart(${item.id})">Add to Order</button>
-                    </div>
-                `;
-                menuGrid.appendChild(menuItemElement);
-            });
+            // Only show main course items in the menu section
+            menuItems
+                .filter(item => item.category === 'Main Course')
+                .forEach(item => {
+                    const menuItemElement = document.createElement('div');
+                    menuItemElement.className = 'menu-item';
+                    menuItemElement.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="menu-item-content">
+                            <h3 class="menu-item-title">${item.name}</h3>
+                            <p class="menu-item-price">$${item.price.toFixed(2)}</p>
+                            <button class="menu-item-add" onclick="addToCart(${item.id})">Add to Order</button>
+                        </div>
+                    `;
+                    menuGrid.appendChild(menuItemElement);
+                });
         }
 
         // Add item to cart
