@@ -216,6 +216,9 @@
         document.getElementById('register-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            
             const formData = new FormData(this);
             const registerData = {
                 first_name: formData.get('first_name'),
@@ -227,38 +230,65 @@
                 confirm_password: formData.get('confirm_password')
             };
 
+            // Reset messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
             // Validate password
             if (registerData.password !== registerData.confirm_password) {
-                const errorMessage = document.getElementById('error-message');
                 errorMessage.textContent = 'Passwords do not match';
                 errorMessage.style.display = 'block';
                 return;
             }
 
-            try {
-                // Here you would make an API call to your backend
-                const response = await fetch('/api/auth/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(registerData)
-                });
+            // Password strength validation
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+            if (!passwordRegex.test(registerData.password)) {
+                errorMessage.textContent = 'Password does not meet requirements';
+                errorMessage.style.display = 'block';
+                return;
+            }
 
-                if (response.ok) {
-                    const successMessage = document.getElementById('success-message');
-                    successMessage.textContent = 'Registration successful! Redirecting to login...';
-                    successMessage.style.display = 'block';
-                    
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2000);
-                } else {
-                    throw new Error('Registration failed. Please try again.');
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(registerData.email)) {
+                errorMessage.textContent = 'Please enter a valid email address';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Phone number validation
+            const phoneRegex = /^\+?[\d\s-]{10,}$/;
+            if (!phoneRegex.test(registerData.phone_number)) {
+                errorMessage.textContent = 'Please enter a valid phone number';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Check if user already exists
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                if (users.some(user => user.email === registerData.email)) {
+                    errorMessage.textContent = 'Email already registered';
+                    errorMessage.style.display = 'block';
+                    return;
                 }
+
+                // Add new user
+                delete registerData.confirm_password;
+                users.push(registerData);
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Show success message
+                successMessage.textContent = 'Registration successful! Redirecting to login...';
+                successMessage.style.display = 'block';
+
+                // Redirect to login page after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
             } catch (error) {
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.textContent = error.message;
+                errorMessage.textContent = 'Registration failed. Please try again.';
                 errorMessage.style.display = 'block';
             }
         });

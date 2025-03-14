@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order - Bosa Kitchen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #264653;
+            --secondary-color: #f4a261;
+            --accent-color: #e9c46a;
+            --text-color: #2a2a2a;
+            --light-bg: #f9f9f9;
+            --white: #ffffff;
+            --success: #28a745;
+            --error: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .order-form {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .cart-summary {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: right;
+            margin-top: 1rem;
+        }
+
+        .btn-submit {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background: var(--secondary-color);
+        }
+
+        .order-success {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .order-success h2 {
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .btn-track {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .btn-track:hover {
+            background: var(--secondary-color);
+        }
+
+        .error {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="order-form" class="order-form">
+            <h2>Place Your Order</h2>
+            
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div id="cart-items"></div>
+                <div class="total">
+                    Total: <span id="cart-total">$0.00</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Delivery Address</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="specialInstructions">Special Instructions (Optional)</label>
+                <textarea id="specialInstructions" name="specialInstructions" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Place Order</button>
+        </form>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <script src="js/order.js"></script>
+    <script>
+        // Load cart items on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            
+            let total = 0;
+            
+            cartItemsContainer.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <span>${item.quantity}x ${item.name}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            cartTotalElement.textContent = `$${total.toFixed(2)}`;
+
+            // Redirect if cart is empty
+            if (cart.length === 0) {
+                window.location.href = 'menu.html';
+            }
+        });
+    </script>
+</body>
+</html> 
