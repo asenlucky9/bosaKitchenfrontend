@@ -1,31 +1,27 @@
 # Bosa Kitchen Website Documentation
 
 ## Project Overview
-Bosa Kitchen is a modern restaurant website that allows customers to browse menus, place orders, and manage their accounts. The website features a responsive design, user authentication, and an interactive menu system.
+Bosa Kitchen is a modern restaurant website that allows customers to browse menus, place orders, track deliveries, and manage their accounts. The website features a responsive design, user authentication, real-time order tracking, and an interactive menu system.
 
 ## Technology Stack
 - **Frontend**:
-  - HTML5
-  - CSS3 (Custom variables, Flexbox)
+  - HTML5 (Semantic Elements, Form Validation)
+  - CSS3 (Custom variables, Flexbox, Grid, Animations)
   - Vanilla JavaScript (ES6+)
   - Font Awesome 6.0.0 for icons
+  - Google Maps API for delivery tracking
 
 ## Features
 
 ### 1. User Interface
-- Responsive design that works on all device sizes
-- Modern and clean layout
-- Consistent color scheme using CSS variables:
-  ```css
-  :root {
-      --primary-color: #264653;
-      --secondary-color: #f4a261;
-      --accent-color: #e9c46a;
-      --text-color: #2a2a2a;
-      --light-bg: #f9f9f9;
-      --white: #ffffff;
-  }
-  ```
+- Responsive design optimized for all device sizes
+- Modern and clean layout with smooth animations
+- Multilingual support (English, French, Spanish)
+- Consistent color scheme using CSS variables
+- Mobile-first approach with hamburger menu
+- Back to Top button for easy navigation
+- Loading animations and transitions
+- Page loader for better user experience
 
 ### 2. Authentication System
 #### Registration (`register.html`)
@@ -53,29 +49,57 @@ Bosa Kitchen is a modern restaurant website that allows customers to browse menu
 - Redirect handling after successful login
 
 ### 3. Menu System
-- Interactive menu display
-- Categories:
+- Interactive menu display with categories:
   - Main Course
-  - Beverages
+  - Beverages (Soft Drinks, African Drinks, Other Beverages)
 - Each menu item includes:
-  - Name
+  - High-quality image with loading state
+  - Detailed description
   - Price
-  - Image
-  - Description
-  - Add to Order button
+  - Add to Cart functionality
+  - Hover effects and animations
 
 ### 4. Shopping Cart
-- Add/remove items
-- Quantity adjustment
-- Price calculation
-- Order summary
-- Local storage persistence
+- Real-time cart preview
+- Add/remove items with quantity adjustment
+- Auto-hide preview after adding items
+- Persistent cart state
+- Quick checkout access
+- Total price calculation
+- Mobile-responsive design
 
-### 5. Animations and Effects
-- Hover effects on buttons and links
-- Smooth transitions
-- Loading states
-- Success/Error message animations
+### 5. Order Tracking
+- Real-time order status updates
+- Progress bar visualization
+- Estimated delivery time
+- Quick tracking form in hero section
+- Detailed tracking page with map integration
+- Order status notifications
+
+### 6. Special Features
+- Chef's Recommendations section
+- Special offers and promotions
+- Customer reviews system
+- Location information with map
+- Multi-language support
+- Privacy policy and terms of service modals
+- Contact information and business hours
+
+### 7. Performance Optimizations
+- Lazy loading for images
+- Smooth scrolling behavior
+- Intersection Observer for animations
+- Efficient DOM updates
+- Loading states for better UX
+- Optimized mobile menu
+
+### 8. Form Handling
+- Real-time validation
+- Error messaging
+- Success feedback
+- Required field handling
+- Payment method selection
+- Delivery/Pickup options
 
 ## File Structure
 ```
@@ -83,9 +107,12 @@ bosaKitchenfrontend/
 ├── index.html          # Main landing page
 ├── login.html          # User login page
 ├── register.html       # User registration page
+├── track-order.html    # Order tracking page
+├── rider.html          # Rider dashboard
 ├── README.md          # Project documentation
 └── menu/              # Directory containing menu images
-    └── Bosa Logo.jpeg # Restaurant logo
+    ├── Bosa Logo.jpeg # Restaurant logo
+    └── beverages/     # Beverage images
 ```
 
 ## Local Storage Structure
@@ -121,43 +148,25 @@ The website uses localStorage for data persistence:
 ```
 
 ## Security Features
-1. Password Requirements:
-   ```javascript
-   const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
-   ```
-2. Email Validation:
-   ```javascript
-   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-   ```
-3. Phone Number Validation:
-   ```javascript
-   const phoneRegex = /^\+?[\d\s-]{10,}$/;
-   ```
-
-## Future Improvements
-1. Backend Integration:
-   - Replace localStorage with proper database storage
-   - Implement secure API endpoints
-   - Add proper session management
-
-2. Enhanced Security:
-   - Password hashing
-   - JWT authentication
-   - HTTPS implementation
+1. Form Validation:
+   - Password strength requirements
+   - Email format validation
+   - Phone number validation
    - CSRF protection
+   - XSS prevention
 
-3. Additional Features:
-   - Email verification
-   - Password reset functionality
-   - Order history
-   - User profile management
-   - Payment integration
-   - Real-time order tracking
+2. External Links:
+   - rel="noopener noreferrer" for security
+   - target="_blank" handling
+   - Secure payment processing
 
-## Development Setup
-1. Clone the repository
-2. No build process required - static HTML/CSS/JS
-3. Open `index.html` in a modern web browser
+## Performance Considerations
+- Minified CSS and JavaScript
+- Optimized images with lazy loading
+- Efficient DOM manipulation
+- Local storage for data persistence
+- Loading states and animations
+- Mobile-first responsive design
 
 ## Browser Compatibility
 - Chrome (latest)
@@ -165,11 +174,32 @@ The website uses localStorage for data persistence:
 - Safari (latest)
 - Edge (latest)
 
-## Performance Considerations
-- Minified CSS and JavaScript files
-- Optimized images
-- Local storage for data persistence
-- Efficient DOM manipulation
+## Future Improvements
+1. Backend Integration:
+   - RESTful API implementation
+   - Database integration
+   - User authentication system
+   - Order management system
+
+2. Enhanced Features:
+   - Online payment integration
+   - User profiles
+   - Order history
+   - Loyalty program
+   - Email notifications
+   - Push notifications
+
+3. Additional Optimizations:
+   - Image CDN integration
+   - Service Worker implementation
+   - Offline support
+   - Cache management
+   - Performance monitoring
+
+## Development Setup
+1. Clone the repository
+2. No build process required - static HTML/CSS/JS
+3. Open `index.html` in a modern web browser
 
 ## Maintenance
 - Regular updates to dependencies
@@ -188,4 +218,7 @@ The website uses localStorage for data persistence:
 This project is licensed under the MIT License.
 
 ## Contact
-For support or inquiries, please contact the development team. 
+For support or inquiries:
+- Technical Support: support@bosakitchen.com
+- Feature Requests: features@bosakitchen.com
+- Bug Reports: bugs@bosakitchen.com 

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bosa Kitchen - Login</title>
+    <meta name="description" content="Login to Bosa Kitchen - Ethiopian Restaurant">
+    <title>Login - Bosa Kitchen</title>
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -150,107 +152,139 @@
             margin-bottom: 1rem;
             display: none;
         }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 2rem;
+        }
+
+        .login-form {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-form h2 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #c41230;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <div style="padding: 1rem; text-align: center;">
-        <a href="index.html" style="color: var(--primary-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-            <i class="fas fa-arrow-left"></i> Back to Home
-        </a>
-    </div>
-    <div class="auth-container">
-        <div class="auth-header">
-            <img src="menu/Bosa Logo.jpeg" alt="Bosa Kitchen Logo">
-            <h1>Welcome Back</h1>
-            <p>Sign in to your account</p>
-        </div>
-
-        <div class="error-message" id="error-message"></div>
-        <div class="success-message" id="success-message"></div>
-
-        <form id="login-form">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required>
+    <header>
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="images/logo.jpg" alt="Bosa Kitchen Logo" width="120" height="120">
+                <div class="brand-text">
+                    <h1>Bosa Kitchen</h1>
+                    <p>Authentic Ethiopian Cuisine</p>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="auth-btn">Sign In</button>
-        </form>
-
-        <div class="auth-links">
-            <a href="#" id="forgot-password">Forgot Password?</a>
         </div>
+    </header>
 
-        <div class="auth-separator">or</div>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html">Home</a>
+            <a href="index.html#menu">Menu</a>
+            <a href="index.html#special-offers">Special Offers</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+    </nav>
 
-        <button class="auth-btn" style="background-color: var(--secondary-color);" onclick="window.location.href='register.html'">
-            Create New Account
-        </button>
-    </div>
+    <main>
+        <section class="login-section">
+            <div class="login-container">
+                <h2 class="text-center mb-2">Login</h2>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember"> Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+                <p class="text-center mt-2">
+                    Don't have an account? <a href="register.html">Register here</a>
+                </p>
+            </div>
+        </section>
+    </main>
 
-    <script>
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const errorMessage = document.getElementById('error-message');
-            const successMessage = document.getElementById('success-message');
-            
-            const formData = new FormData(this);
-            const loginData = {
-                email: formData.get('email'),
-                password: formData.get('password')
-            };
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>123 Ethiopian Street</p>
+                <p>Melbourne, VIC 3000</p>
+                <p>Phone: (03) 1234 5678</p>
+                <p>Email: info@bosakitchen.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Opening Hours</h3>
+                <p>Monday - Friday: 11:00 AM - 10:00 PM</p>
+                <p>Saturday - Sunday: 12:00 PM - 11:00 PM</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-            // Reset messages
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-
-            try {
-                // Get users from localStorage
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.email === loginData.email && u.password === loginData.password);
-
-                if (user) {
-                    // Store user info in localStorage (except password)
-                    const userInfo = { ...user };
-                    delete userInfo.password;
-                    localStorage.setItem('currentUser', JSON.stringify(userInfo));
-
-                    // Show success message
-                    successMessage.textContent = 'Login successful! Redirecting...';
-                    successMessage.style.display = 'block';
-
-                    // Redirect to home page after 1 second
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1000);
-                } else {
-                    throw new Error('Invalid email or password');
-                }
-            } catch (error) {
-                errorMessage.textContent = error.message;
-                errorMessage.style.display = 'block';
-            }
-        });
-
-        // Handle forgot password
-        document.getElementById('forgot-password').addEventListener('click', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            
-            if (!email) {
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.textContent = 'Please enter your email address first';
-                errorMessage.style.display = 'block';
-                return;
-            }
-
-            // In a real application, this would trigger a password reset email
-            alert('In a real application, a password reset link would be sent to your email.');
-        });
-    </script>
+    <script src="js/login.js"></script>
 </body>
 </html> 

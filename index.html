@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bosa Kitchen - Authentic Ethiopian Restaurant">
+    <meta name="theme-color" content="#e31837">
+    <title>Bosa Kitchen - Ethiopian Restaurant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta name="description" content="Bosa Kitchen - Authentic African cuisine in Montreal. Experience traditional African dishes, beverages, and exceptional service. Order online for delivery or pickup.">
     <meta name="keywords" content="African food, Montreal restaurant, Jollof Rice, African cuisine, food delivery, Bosa Kitchen">
     <meta name="author" content="Bosa Kitchen">
@@ -1693,62 +1697,7 @@
             <h2>Our Menu</h2>
             <p>Explore our delicious offerings</p>
         </div>
-        <div class="menu-grid">
-            <div class="menu-item">
-                <img src="menu/menu13.jpg" alt="Jollof Rice and Chicken">
-                <div class="menu-item-content">
-                    <h3 class="menu-item-title">Jollof Rice & Chicken</h3>
-                    <p class="menu-item-description">Our signature dish - perfectly spiced rice cooked in rich tomato sauce, served with tender grilled chicken.</p>
-                    <p class="menu-item-price">$15</p>
-                    <button class="menu-item-add" onclick="addToCart(1)">Add to Order</button>
-                </div>
-            </div>
-            <div class="menu-item">
-                <img src="menu/menu16.jpg" alt="Fried Rice and Turkey">
-                <div class="menu-item-content">
-                    <h3 class="menu-item-title">Fried Rice and Turkey</h3>
-                    <p class="menu-item-description">Savory fried rice with perfectly seasoned turkey, mixed vegetables, and our special spice blend.</p>
-                    <p class="menu-item-price">$15</p>
-                    <button class="menu-item-add" onclick="addToCart(2)">Add to Order</button>
-                </div>
-            </div>
-            <div class="menu-item">
-                <img src="menu/menu5.jpg" alt="Boiled Rice and Turkey Stew">
-                <div class="menu-item-content">
-                    <h3 class="menu-item-title">Boiled Rice and Turkey Stew</h3>
-                    <p class="menu-item-description">Tender turkey in a rich, flavorful stew served with perfectly cooked rice.</p>
-                    <p class="menu-item-price">$12</p>
-                    <button class="menu-item-add" onclick="addToCart(3)">Add to Order</button>
-                </div>
-            </div>
-            <div class="menu-item">
-                <img src="menu/menu8.jpg" alt="Plantain and Beans">
-                <div class="menu-item-content">
-                    <h3 class="menu-item-title">Plantain and Beans</h3>
-                    <p class="menu-item-description">Sweet fried plantains served with seasoned beans, a classic African combination.</p>
-                    <p class="menu-item-price">$10</p>
-                    <button class="menu-item-add" onclick="addToCart(4)">Add to Order</button>
-                </div>
-            </div>
-            <div class="menu-item">
-                <img src="menu/menu7.jpg" alt="Sea Food Okro">
-                <div class="menu-item-content">
-                    <h3 class="menu-item-title">Sea Food Okro</h3>
-                    <p class="menu-item-description">Fresh seafood medley in a traditional okro soup, perfectly seasoned with African spices.</p>
-                    <p class="menu-item-price">$20</p>
-                    <button class="menu-item-add" onclick="addToCart(5)">Add to Order</button>
-                </div>
-            </div>
-            <div class="menu-item">
-                <img src="menu/menu12.jpg" alt="Bolognese Spaghetti">
-                <div class="menu-item-content">
-                    <h3 class="menu-item-title">Bolognese Spaghetti</h3>
-                    <p class="menu-item-description">Italian-African fusion pasta with rich meat sauce and our special blend of spices.</p>
-                    <p class="menu-item-price">$15</p>
-                    <button class="menu-item-add" onclick="addToCart(6)">Add to Order</button>
-                </div>
-            </div>
-        </div>
+        <div class="menu-grid"></div>
     </section>
 
     <section id="drinks" class="drinks-section">
@@ -2155,6 +2104,97 @@
         </a>
     </div>
 
+    <script src="js/api.js"></script>
+    <script>
+        // Load menu items when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Get the menu grid container
+                const menuGrid = document.querySelector('.menu-grid');
+                
+                // Clear existing menu items
+                menuGrid.innerHTML = '';
+                
+                // Add menu items to the grid
+                menuItems.forEach(item => {
+                    if (item.category === 'Main Course') {
+                        const menuItemHtml = `
+                            <div class="menu-item">
+                                <img src="${item.image}" alt="${item.name}">
+                                <div class="menu-item-content">
+                                    <h3 class="menu-item-title">${item.name}</h3>
+                                    <p class="menu-item-description">${item.description}</p>
+                                    <p class="menu-item-price">$${item.price.toFixed(2)}</p>
+                                    <button class="menu-item-add" onclick="addToCart(${item.id})">
+                                        Add to Cart <i class="fas fa-cart-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        menuGrid.insertAdjacentHTML('beforeend', menuItemHtml);
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error loading menu items:', error);
+                // Show error message to user
+                const menuSection = document.querySelector('#menu');
+                menuSection.innerHTML = `
+                    <div class="error-message">
+                        <p>Sorry, we couldn't load the menu items. Please try again later.</p>
+                    </div>
+                `;
+            }
+        });
+
+        // Function to add items to cart
+        function addToCart(item) {
+            // Get existing cart from localStorage or initialize empty array
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            // Add item to cart
+            cart.push({
+                id: item.item_id,
+                name: item.name,
+                price: item.price,
+                quantity: 1
+            });
+            
+            // Save updated cart
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show success message
+            showNotification('Item added to cart!');
+        }
+
+        // Function to update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cartCount = document.querySelector('.cart-count');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+        }
+
+        // Function to show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Update cart count when page loads
+        updateCartCount();
+    </script>
     <script>
         // Carousel functionality
         let currentSlide = 0;
@@ -2192,6 +2232,9 @@ function prevSlide() {
             { id: 15, name: 'Meat Pies (5 pieces)', price: 20.00, category: 'Main Course', image: 'menu/Meat Pies.jpg', description: 'Flaky pastry filled with seasoned minced meat, onions, and African spices. Served hot and fresh.' },
             { id: 16, name: 'Pounded Yam & Egusi', price: 20.00, category: 'Main Course', image: 'menu/padyam&egusi.jpg', description: 'Smooth, pounded yam served with rich egusi soup made with ground melon seeds and choice meat.' },
             { id: 17, name: 'Fish', price: 20.00, category: 'Main Course', image: 'menu/fish.png', description: 'Fresh fish seasoned and grilled to perfection with our signature spice blend.' },
+            { id: 18, name: 'Kpomo', price: 15.00, category: 'Main Course', image: 'menu/kpbomo.jpg', description: 'Traditional cow skin delicacy, perfectly prepared and seasoned with African spices.' },
+            { id: 19, name: 'Shawarma', price: 15.00, category: 'Main Course', image: 'menu/shawarma.jpg', description: 'African-style shawarma filled with seasoned meat, fresh vegetables, and our special sauce.' },
+            { id: 20, name: 'Moi Moi (5 pieces)', price: 20.00, category: 'Main Course', image: 'menu/moi-moi.webp', description: 'Steamed bean pudding made with ground beans, peppers, and spices. A delicious Nigerian delicacy.' },
             // Beverages
             { id: 7, name: 'Coca-Cola', price: 2.50, category: 'Soft Drinks', size: '355ml', image: 'menu/beverages/coca-cola.jpg' },
             { id: 8, name: 'Sprite', price: 2.50, category: 'Soft Drinks', size: '355ml', image: 'menu/beverages/sprite.jpg' },
