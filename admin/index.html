@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Bosa Kitchen</title>
+    <script>
+        // Check if already logged in
+        const adminToken = localStorage.getItem('adminToken');
+        if (adminToken) {
+            window.location.href = 'dashboard.html';
+        } else {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+    <noscript>
+        <p>Please enable JavaScript to access the admin panel.</p>
+        <p>If JavaScript is enabled, you can also <a href="login.html">click here</a> to go to the login page.</p>
+    </noscript>
+</body>
+</html> 

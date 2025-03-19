@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../menu/Bosa Logo.jpeg" alt="Bosa Kitchen Logo" class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="orders.html" class="active">
+                    <i class="fas fa-shopping-bag"></i> Orders
+                    <span class="badge" id="pendingOrdersBadge">0</span>
+                </a>
+                <a href="menu.html">
+                    <i class="fas fa-utensils"></i> Menu
+                </a>
+                <a href="customers.html">
+                    <i class="fas fa-users"></i> Customers
+                </a>
+                <a href="analytics.html">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <h1>Orders</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <input type="text" id="searchOrders" placeholder="Search orders..." aria-label="Search orders">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <select id="orderStatus" class="select-status" aria-label="Filter orders by status">
+                        <option value="">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <button id="exportOrders" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </header>
+
+            <!-- Orders List -->
+            <div class="table-container">
+                <table class="data-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Orders will be loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Order Details Modal -->
+            <div id="orderModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Order Details</h2>
+                        <button class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="order-info">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Order ID:</label>
+                                    <p id="orderID"></p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Date:</label>
+                                    <p id="orderDate"></p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Status:</label>
+                                    <select id="orderStatusUpdate" class="status-select" aria-label="Update order status">
+                                        <option value="pending">Pending</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="customer-details">
+                            <h3>Customer Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Name:</label>
+                                    <p id="customerName"></p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Phone:</label>
+                                    <p id="customerPhone"></p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Email:</label>
+                                    <p id="customerEmail"></p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Address:</label>
+                                    <p id="customerAddress"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-items">
+                            <h3>Order Items</h3>
+                            <table class="items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderItems">
+                                    <!-- Order items will be loaded dynamically -->
+                                </tbody>
+                            </table>
+                            <div class="order-summary">
+                                <div class="summary-item">
+                                    <span>Subtotal:</span>
+                                    <span id="subtotal">$0.00</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Tax:</span>
+                                    <span id="tax">$0.00</span>
+                                </div>
+                                <div class="summary-item total">
+                                    <span>Total:</span>
+                                    <span id="total">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="printOrder" class="btn btn-secondary">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                        <button id="updateOrder" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="../js/config.js" type="module"></script>
+    <script src="js/orders.js" type="module"></script>
+</body>
+</html> 

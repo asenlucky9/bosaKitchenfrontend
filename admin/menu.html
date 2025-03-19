@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Management - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../menu/Bosa Logo.jpeg" alt="Bosa Kitchen Logo" class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="orders.html">
+                    <i class="fas fa-shopping-bag"></i> Orders
+                    <span class="badge" id="pendingOrdersBadge">0</span>
+                </a>
+                <a href="menu.html" class="active">
+                    <i class="fas fa-utensils"></i> Menu
+                </a>
+                <a href="customers.html">
+                    <i class="fas fa-users"></i> Customers
+                </a>
+                <a href="analytics.html">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Menu Management</h1>
+                <div class="header-actions">
+                    <button id="addMenuItem" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Menu Item
+                    </button>
+                    <button id="addCategory" class="btn btn-secondary">
+                        <i class="fas fa-folder-plus"></i> Add Category
+                    </button>
+                </div>
+            </header>
+
+            <!-- Menu Controls -->
+            <div class="menu-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="menuSearch" placeholder="Search menu items...">
+                </div>
+                <div class="filter-box">
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <!-- Categories will be loaded dynamically -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Menu Items Grid -->
+            <div class="menu-grid" id="menuContainer">
+                <!-- Menu items will be loaded dynamically -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="../js/config.js" type="module"></script>
+    <script src="js/menu-manager.js" type="module"></script>
+</body>
+</html> 

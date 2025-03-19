@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Bosa Kitchen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #264653;
+            --secondary-color: #f4a261;
+            --accent-color: #e9c46a;
+            --text-color: #2a2a2a;
+            --light-bg: #f9f9f9;
+            --white: #ffffff;
+            --success: #28a745;
+            --pending: #ffc107;
+            --error: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .confirmation-header i {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .order-number {
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .order-number span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-left: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .order-details {
+            margin: 2rem 0;
+        }
+
+        .order-details h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+
+        .detail-item label {
+            font-weight: bold;
+            color: var(--text-color);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .items-list {
+            margin: 2rem 0;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .status-pending {
+            background: var(--pending);
+            color: #000;
+        }
+
+        .status-confirmed {
+            background: var(--success);
+            color: white;
+        }
+
+        .estimated-time {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="confirmation-header">
+            <i class="fas fa-check-circle"></i>
+            <h1>Thank You for Your Order!</h1>
+            <p>We're preparing your delicious meal.</p>
+        </div>
+
+        <div class="order-number">
+            Order Number: 
+            <span id="displayedOrderNumber"></span>
+            <button class="copy-btn" onclick="copyOrderNumber()" title="Copy Order Number" aria-label="Copy Order Number">
+                <i class="fas fa-copy" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="order-details">
+            <div class="details-grid">
+                <div class="detail-item">
+                    <label>Status</label>
+                    <span id="orderStatus" class="status-badge status-pending">Pending</span>
+                </div>
+                <div class="detail-item">
+                    <label>Order Date</label>
+                    <span id="orderDate"></span>
+                </div>
+                <div class="detail-item">
+                    <label>Customer Name</label>
+                    <span id="customerName"></span>
+                </div>
+                <div class="detail-item">
+                    <label>Delivery Address</label>
+                    <span id="deliveryAddress"></span>
+                </div>
+            </div>
+
+            <h3>Order Items</h3>
+            <div id="itemsList" class="items-list">
+                <!-- Items will be inserted here -->
+            </div>
+
+            <div class="total">
+                Total: <span id="orderTotal"></span>
+            </div>
+        </div>
+
+        <div class="estimated-time">
+            <h3>Estimated Delivery Time</h3>
+            <p id="estimatedTime">30-45 minutes</p>
+        </div>
+
+        <div class="buttons">
+            <a href="track-order.html" class="btn btn-primary">Track Order</a>
+            <a href="index.html" class="btn btn-secondary">Return to Menu</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get order number from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderNumber = urlParams.get('order');
+
+            // Get last order from localStorage
+            const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
+            if (!lastOrder || lastOrder.orderNumber !== orderNumber) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Display order details
+            document.getElementById('displayedOrderNumber').textContent = lastOrder.orderNumber;
+            document.getElementById('orderDate').textContent = new Date(lastOrder.timestamp).toLocaleString();
+            document.getElementById('customerName').textContent = lastOrder.customerName;
+            document.getElementById('deliveryAddress').textContent = lastOrder.address;
+            document.getElementById('orderTotal').textContent = `$${lastOrder.total.toFixed(2)}`;
+
+            // Display order items
+            const itemsList = document.getElementById('itemsList');
+            lastOrder.items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item';
+                itemElement.innerHTML = `
+                    <span>${item.quantity}x ${item.name}</span>
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                itemsList.appendChild(itemElement);
+            });
+
+            // Update status badge
+            const statusBadge = document.getElementById('orderStatus');
+            statusBadge.textContent = lastOrder.status || 'Pending';
+            statusBadge.className = `status-badge status-${lastOrder.status || 'pending'}`;
+
+            // Update tracking link to include order number
+            const trackingLink = document.querySelector('.btn-primary');
+            trackingLink.href = `track-order.html?order=${lastOrder.orderNumber}`;
+        });
+
+        function copyOrderNumber() {
+            const orderNumber = document.getElementById('displayedOrderNumber').textContent;
+            navigator.clipboard.writeText(orderNumber).then(() => {
+                alert('Order number copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy order number');
+            });
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bosa Kitchen - Rider Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <style>
+        :root {
+            --primary-color: #264653;
+            --secondary-color: #f4a261;
+            --accent-color: #e9c46a;
+            --text-color: #2a2a2a;
+            --light-bg: #f9f9f9;
+            --white: #ffffff;
+            --success: #28a745;
+            --error: #dc3545;
+            --warning: #ffc107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 2rem;
+        }
+
+        .rider-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .rider-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+
+        .status-toggle {
+            padding: 0.5rem 1rem;
+            background: var(--success);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .status-toggle.offline {
+            background: var(--error);
+        }
+
+        .delivery-list {
+            margin-top: 2rem;
+        }
+
+        .delivery-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .delivery-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .delivery-item.active {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .map-container {
+            height: 400px;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .delivery-details {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn.primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .action-btn.success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .action-btn.warning {
+            background: var(--warning);
+            color: var(--text-color);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="rider-profile">
+                <img src="assets/images/rider-default.jpg" alt="Rider" class="rider-photo">
+                <h2>John Doe</h2>
+                <p>ID: #12345</p>
+                <button class="status-toggle" id="status-toggle">
+                    <i class="fas fa-circle"></i> Online
+                </button>
+            </div>
+
+            <div class="delivery-list">
+                <h3>Active Deliveries</h3>
+                <div id="active-deliveries"></div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Deliveries Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4.8</div>
+                    <div class="stat-label">Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$120</div>
+                    <div class="stat-label">Earnings Today</div>
+                </div>
+            </div>
+
+            <div class="map-container" id="rider-map"></div>
+
+            <div class="delivery-details">
+                <h2>Current Delivery</h2>
+                <div id="current-delivery-details">
+                    <p><strong>Order ID:</strong> <span id="order-id">#123456</span></p>
+                    <p><strong>Customer:</strong> <span id="customer-name">Alice Johnson</span></p>
+                    <p><strong>Address:</strong> <span id="delivery-address">123 Main St, City</span></p>
+                    <p><strong>Items:</strong> <span id="order-items">2x Jollof Rice, 1x Chicken</span></p>
+                    <p><strong>Total:</strong> <span id="order-total">$35.00</span></p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn primary" onclick="startDelivery()">
+                        <i class="fas fa-motorcycle"></i> Start Delivery
+                    </button>
+                    <button class="action-btn warning" onclick="updateStatus()">
+                        <i class="fas fa-clock"></i> Update ETA
+                    </button>
+                    <button class="action-btn success" onclick="completeDelivery()">
+                        <i class="fas fa-check"></i> Complete
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        class RiderDashboard {
+            constructor() {
+                this.map = null;
+                this.marker = null;
+                this.watchId = null;
+                this.online = true;
+                this.currentDelivery = null;
+                this.init();
+            }
+
+            async init() {
+                this.initMap();
+                this.setupEventListeners();
+                this.startLocationTracking();
+                await this.loadDeliveries();
+            }
+
+            initMap() {
+                this.map = new google.maps.Map(document.getElementById('rider-map'), {
+                    zoom: 15,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+
+                this.marker = new google.maps.Marker({
+                    map: this.map,
+                    icon: {
+                        url: 'assets/images/rider-icon.png',
+                        scaledSize: new google.maps.Size(40, 40)
+                    }
+                });
+            }
+
+            setupEventListeners() {
+                document.getElementById('status-toggle').addEventListener('click', () => {
+                    this.toggleOnlineStatus();
+                });
+            }
+
+            startLocationTracking() {
+                if ('geolocation' in navigator) {
+                    this.watchId = navigator.geolocation.watchPosition(
+                        position => this.updateLocation(position),
+                        error => console.error('Error:', error),
+                        {
+                            enableHighAccuracy: true,
+                            maximumAge: 30000,
+                            timeout: 27000
+                        }
+                    );
+                }
+            }
+
+            updateLocation(position) {
+                const { latitude, longitude } = position.coords;
+                const location = new google.maps.LatLng(latitude, longitude);
+                
+                this.marker.setPosition(location);
+                this.map.setCenter(location);
+
+                // Update server with new location
+                this.updateServerLocation(latitude, longitude);
+            }
+
+            async updateServerLocation(latitude, longitude) {
+                // Store in localStorage for demo (replace with API call)
+                if (this.currentDelivery) {
+                    localStorage.setItem(`delivery_${this.currentDelivery.id}_location`, JSON.stringify({
+                        latitude,
+                        longitude,
+                        timestamp: new Date().toISOString()
+                    }));
+                }
+            }
+
+            toggleOnlineStatus() {
+                this.online = !this.online;
+                const btn = document.getElementById('status-toggle');
+                
+                if (this.online) {
+                    btn.innerHTML = '<i class="fas fa-circle"></i> Online';
+                    btn.classList.remove('offline');
+                    this.startLocationTracking();
+                } else {
+                    btn.innerHTML = '<i class="fas fa-circle"></i> Offline';
+                    btn.classList.add('offline');
+                    this.stopLocationTracking();
+                }
+            }
+
+            stopLocationTracking() {
+                if (this.watchId) {
+                    navigator.geolocation.clearWatch(this.watchId);
+                    this.watchId = null;
+                }
+            }
+
+            async loadDeliveries() {
+                // Load from localStorage for demo (replace with API call)
+                const deliveries = JSON.parse(localStorage.getItem('active_deliveries') || '[]');
+                const container = document.getElementById('active-deliveries');
+                
+                container.innerHTML = deliveries.map(delivery => `
+                    <div class="delivery-item" onclick="selectDelivery('${delivery.id}')">
+                        <strong>#${delivery.id}</strong>
+                        <p>${delivery.address}</p>
+                        <small>ETA: ${delivery.eta}</small>
+                    </div>
+                `).join('');
+            }
+
+            async startDelivery() {
+                if (!this.currentDelivery) return;
+                
+                // Update delivery status
+                this.currentDelivery.status = 'in_progress';
+                this.updateDeliveryUI();
+
+                // Notify customer
+                this.notifyCustomer('pickup');
+            }
+
+            async updateStatus() {
+                const eta = prompt('Enter new ETA (in minutes):');
+                if (eta && this.currentDelivery) {
+                    this.currentDelivery.eta = `${eta} mins`;
+                    this.updateDeliveryUI();
+                    this.notifyCustomer('eta_update', { eta });
+                }
+            }
+
+            async completeDelivery() {
+                if (!this.currentDelivery) return;
+
+                if (confirm('Mark delivery as completed?')) {
+                    // Update delivery status
+                    this.currentDelivery.status = 'completed';
+                    this.notifyCustomer('delivered');
+
+                    // Remove from active deliveries
+                    await this.loadDeliveries();
+                    this.currentDelivery = null;
+                    this.updateDeliveryUI();
+                }
+            }
+
+            notifyCustomer(status, details = {}) {
+                // Store notification in localStorage (replace with API call)
+                const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+                notifications.push({
+                    deliveryId: this.currentDelivery.id,
+                    status,
+                    details,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+            }
+
+            updateDeliveryUI() {
+                const details = document.getElementById('current-delivery-details');
+                if (!this.currentDelivery) {
+                    details.innerHTML = '<p>No active delivery selected</p>';
+                    return;
+                }
+
+                document.getElementById('order-id').textContent = `#${this.currentDelivery.id}`;
+                document.getElementById('customer-name').textContent = this.currentDelivery.customer;
+                document.getElementById('delivery-address').textContent = this.currentDelivery.address;
+                document.getElementById('order-items').textContent = this.currentDelivery.items;
+                document.getElementById('order-total').textContent = this.currentDelivery.total;
+            }
+        }
+
+        // Initialize dashboard
+        const dashboard = new RiderDashboard();
+
+        // Global functions for HTML onclick handlers
+        function selectDelivery(id) {
+            dashboard.currentDelivery = {
+                id,
+                customer: 'Alice Johnson',
+                address: '123 Main St, City',
+                items: '2x Jollof Rice, 1x Chicken',
+                total: '$35.00',
+                status: 'pending'
+            };
+            dashboard.updateDeliveryUI();
+        }
+
+        function startDelivery() {
+            dashboard.startDelivery();
+        }
+
+        function updateStatus() {
+            dashboard.updateStatus();
+        }
+
+        function completeDelivery() {
+            dashboard.completeDelivery();
+        }
+    </script>
+</body>
+</html> 

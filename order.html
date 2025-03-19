@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order - Bosa Kitchen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #264653;
+            --secondary-color: #f4a261;
+            --accent-color: #e9c46a;
+            --text-color: #2a2a2a;
+            --light-bg: #f9f9f9;
+            --white: #ffffff;
+            --success: #28a745;
+            --error: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .order-form {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .cart-summary {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: right;
+            margin-top: 1rem;
+        }
+
+        .btn-submit {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background: var(--secondary-color);
+        }
+
+        .order-success {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-content i.fa-check-circle {
+            color: var(--success);
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-info {
+            margin: 2rem 0;
+        }
+
+        .order-number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        #displayed-order-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            letter-spacing: 2px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .copy-message {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .tracking-info {
+            margin: 2rem 0;
+        }
+
+        .btn-track {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 1rem 0;
+            transition: background-color 0.3s;
+        }
+
+        .btn-track:hover {
+            background: #1a3543;
+        }
+
+        .estimated-time {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        #estimated-time {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .btn-menu {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-menu:hover {
+            background: #e18b4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="order-form" class="order-form">
+            <h2>Place Your Order</h2>
+            
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div id="cart-items"></div>
+                <div class="total">
+                    Total: <span id="cart-total">$0.00</span>
+                </div>
+            </div>
+
+            <!-- Add order confirmation modal -->
+            <div id="orderConfirmation" class="order-success">
+                <div class="success-content">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Order Placed Successfully!</h2>
+                    
+                    <div class="order-info">
+                        <p>Thank you for your order!</p>
+                        <div class="order-number">
+                            <span>Order Number:</span>
+                            <span id="displayed-order-number"></span>
+                            <button class="copy-btn" onclick="copyOrderNumber()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <p class="copy-message" id="copyMessage"></p>
+                    </div>
+
+                    <div class="tracking-info">
+                        <p>Track your order status:</p>
+                        <a href="#" id="trackingLink" class="btn-track">Track Order</a>
+                    </div>
+
+                    <div class="estimated-time">
+                        <p>Estimated Delivery Time:</p>
+                        <p id="estimated-time">30-45 minutes</p>
+                    </div>
+
+                    <a href="index.html" class="btn-menu">Return to Menu</a>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Delivery Address</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="specialInstructions">Special Instructions (Optional)</label>
+                <textarea id="specialInstructions" name="specialInstructions" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Place Order</button>
+        </form>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <script>
+        // Load cart items on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            
+            let total = 0;
+            
+            if (cart.length === 0) {
+                // Redirect to menu if cart is empty
+                window.location.href = 'menu.html';
+                return;
+            }
+
+            cartItemsContainer.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <span>${item.quantity}x ${item.name}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            cartTotalElement.textContent = `$${total.toFixed(2)}`;
+        });
+    </script>
+
+    <!-- Order handling script -->
+    <script type="module">
+        import OrderManager from './js/order.js';
+        
+        // Initialize the form
+        const orderForm = document.getElementById('order-form');
+        if (orderForm) {
+            orderForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                // Show loading state
+                const submitButton = orderForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                try {
+                    const formData = new FormData(orderForm);
+                    const orderData = {
+                        firstName: formData.get('firstName'),
+                        lastName: formData.get('lastName'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        address: formData.get('address'),
+                        items: JSON.parse(localStorage.getItem('cart') || '[]'),
+                        specialInstructions: formData.get('specialInstructions')
+                    };
+
+                    const orderManager = new OrderManager();
+                    const result = await orderManager.placeOrder(orderData);
+
+                    if (result.success) {
+                        // Clear cart
+                        localStorage.removeItem('cart');
+                        
+                        // Redirect to confirmation page
+                        window.location.href = `confirmation.html?order=${result.orderNumber}`;
+                    } else {
+                        alert(result.message || 'Failed to place order. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Order submission error:', error);
+                    alert('An error occurred while placing your order. Please try again.');
+                } finally {
+                    // Reset button state
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

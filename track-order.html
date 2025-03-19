@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Order - Bosa Kitchen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <style>
+        :root {
+            --primary-color: #264653;
+            --secondary-color: #f4a261;
+            --accent-color: #e9c46a;
+            --text-color: #2a2a2a;
+            --light-bg: #f9f9f9;
+            --white: #ffffff;
+            --success: #28a745;
+            --error: #dc3545;
+            --warning: #ffc107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tracking-form {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn-track {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .btn-track:hover {
+            background: var(--secondary-color);
+        }
+
+        .tracking-result {
+            display: none;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .order-status {
+            margin-bottom: 2rem;
+        }
+
+        .status-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .status-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--light-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .step-icon.active {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .status-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--light-bg);
+            z-index: 0;
+        }
+
+        .status-line-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--success);
+            transition: width 0.3s ease;
+        }
+
+        .map-container {
+            height: 300px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .delivery-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        .error-message {
+            color: var(--error);
+            background: rgba(220, 53, 69, 0.1);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tracking-form">
+            <h2>Track Your Order</h2>
+            <p>Enter your order details below</p>
+            <form id="track-form" onsubmit="return trackOrder(event)">
+                <div class="form-group">
+                    <label for="order-number">Order Number</label>
+                    <input type="text" id="order-number" required placeholder="Enter your order number">
+                </div>
+                <div class="form-group">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="last-name" required placeholder="Enter your last name">
+                </div>
+                <button type="submit" class="btn-track">Track Order</button>
+            </form>
+            <div class="error-message" id="error-message"></div>
+        </div>
+
+        <div class="tracking-result" id="tracking-result">
+            <div class="order-status">
+                <h3>Order Status</h3>
+                <div class="status-steps">
+                    <div class="status-line">
+                        <div class="status-line-progress" id="status-progress"></div>
+                    </div>
+                    <div class="status-step">
+                        <div class="step-icon" id="step-confirmed">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step-label">Confirmed</div>
+                    </div>
+                    <div class="status-step">
+                        <div class="step-icon" id="step-preparing">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="step-label">Preparing</div>
+                    </div>
+                    <div class="status-step">
+                        <div class="step-icon" id="step-ready">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="step-label">Ready</div>
+                    </div>
+                    <div class="status-step">
+                        <div class="step-icon" id="step-delivering">
+                            <i class="fas fa-motorcycle"></i>
+                        </div>
+                        <div class="step-label">On the Way</div>
+                    </div>
+                    <div class="status-step">
+                        <div class="step-icon" id="step-delivered">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="step-label">Delivered</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="delivery-info">
+                <div class="info-card">
+                    <h4>Estimated Delivery Time</h4>
+                    <p id="eta">Calculating...</p>
+                </div>
+                <div class="info-card">
+                    <h4>Rider</h4>
+                    <p id="rider-info">Not assigned yet</p>
+                </div>
+                <div class="info-card">
+                    <h4>Order Details</h4>
+                    <p id="order-items"></p>
+                </div>
+            </div>
+
+            <div class="map-container" id="delivery-map"></div>
+        </div>
+    </div>
+
+    <script>
+        class OrderTracker {
+            constructor() {
+                this.map = null;
+                this.marker = null;
+                this.watchId = null;
+                this.currentOrder = null;
+                this.statusSteps = ['confirmed', 'preparing', 'ready', 'delivering', 'delivered'];
+            }
+
+            async trackOrder(orderNumber, lastName) {
+                try {
+                    // In production, this would be an API call
+                    const order = this.getOrderFromStorage(orderNumber, lastName);
+                    
+                    if (!order) {
+                        throw new Error('Order not found. Please check your order number and last name.');
+                    }
+
+                    this.currentOrder = order;
+                    this.showTrackingResult();
+                    this.updateOrderStatus(order.status);
+                    this.initMap();
+                    this.startLocationTracking();
+                    this.updateOrderInfo();
+
+                } catch (error) {
+                    this.showError(error.message);
+                }
+            }
+
+            getOrderFromStorage(orderNumber, lastName) {
+                // This is a demo implementation. Replace with actual API call in production
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                return orders.find(order => 
+                    order.orderNumber === orderNumber && 
+                    order.lastName.toLowerCase() === lastName.toLowerCase()
+                );
+            }
+
+            showTrackingResult() {
+                document.getElementById('tracking-result').style.display = 'block';
+                document.getElementById('error-message').style.display = 'none';
+            }
+
+            showError(message) {
+                const errorElement = document.getElementById('error-message');
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                document.getElementById('tracking-result').style.display = 'none';
+            }
+
+            updateOrderStatus(status) {
+                const currentStepIndex = this.statusSteps.indexOf(status);
+                const progress = (currentStepIndex / (this.statusSteps.length - 1)) * 100;
+
+                document.getElementById('status-progress').style.width = `${progress}%`;
+
+                this.statusSteps.forEach((step, index) => {
+                    const stepElement = document.getElementById(`step-${step}`);
+                    if (index <= currentStepIndex) {
+                        stepElement.classList.add('active');
+                    } else {
+                        stepElement.classList.remove('active');
+                    }
+                });
+            }
+
+            initMap() {
+                if (!this.map) {
+                    this.map = new google.maps.Map(document.getElementById('delivery-map'), {
+                        zoom: 15,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    });
+
+                    this.marker = new google.maps.Marker({
+                        map: this.map,
+                        icon: {
+                            url: 'assets/images/rider-icon.png',
+                            scaledSize: new google.maps.Size(40, 40)
+                        }
+                    });
+                }
+            }
+
+            startLocationTracking() {
+                if (this.currentOrder.status === 'delivering') {
+                    // In production, this would subscribe to real-time updates
+                    this.watchId = setInterval(() => {
+                        const location = this.getRiderLocation();
+                        if (location) {
+                            this.updateRiderLocation(location);
+                        }
+                    }, 5000);
+                }
+            }
+
+            getRiderLocation() {
+                // This is a demo implementation. Replace with actual API call in production
+                return JSON.parse(localStorage.getItem(`delivery_${this.currentOrder.orderNumber}_location`));
+            }
+
+            updateRiderLocation(location) {
+                if (!location) return;
+
+                const position = new google.maps.LatLng(location.latitude, location.longitude);
+                this.marker.setPosition(position);
+                this.map.setCenter(position);
+
+                // Update ETA
+                this.updateETA();
+            }
+
+            updateETA() {
+                const eta = this.calculateETA();
+                document.getElementById('eta').textContent = eta;
+            }
+
+            calculateETA() {
+                // This is a demo implementation. Replace with actual calculation in production
+                return '15-20 minutes';
+            }
+
+            updateOrderInfo() {
+                if (!this.currentOrder) return;
+
+                document.getElementById('order-items').textContent = this.currentOrder.items.join(', ');
+                
+                if (this.currentOrder.rider) {
+                    document.getElementById('rider-info').textContent = 
+                        `${this.currentOrder.rider.name} (${this.currentOrder.rider.phone})`;
+                }
+            }
+
+            cleanup() {
+                if (this.watchId) {
+                    clearInterval(this.watchId);
+                    this.watchId = null;
+                }
+            }
+        }
+
+        const tracker = new OrderTracker();
+
+        function trackOrder(event) {
+            event.preventDefault();
+            
+            const orderNumber = document.getElementById('order-number').value;
+            const lastName = document.getElementById('last-name').value;
+
+            tracker.trackOrder(orderNumber, lastName);
+            return false;
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('unload', () => {
+            tracker.cleanup();
+        });
+    </script>
+    <script src="js/chat.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize tracking functionality
+            const trackingForm = document.querySelector('.tracking-form');
+            const trackingResult = document.querySelector('.tracking-result');
+            let chatSystem = null;
+
+            trackingForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const orderId = document.getElementById('order-id').value;
+                
+                // Show tracking result
+                trackingResult.style.display = 'block';
+                
+                // Initialize chat system when order is found
+                if (!chatSystem) {
+                    const userId = localStorage.getItem('currentUserId') || 'guest-' + Date.now();
+                    const riderName = 'Rider John'; // This would come from your backend
+                    chatSystem = new ChatSystem(orderId, userId, riderName);
+                    
+                    // Add custom order info to chat
+                    chatSystem.addSystemMessage(`Order #${orderId} is being tracked`);
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

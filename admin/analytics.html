@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../js/config.js"></script>
+    <script src="js/auth-middleware.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../menu/Bosa Logo.jpeg" alt="Bosa Kitchen Logo" class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="orders.html">
+                    <i class="fas fa-shopping-bag"></i> Orders
+                    <span class="badge" id="pendingOrdersBadge">0</span>
+                </a>
+                <a href="menu.html">
+                    <i class="fas fa-utensils"></i> Menu
+                </a>
+                <a href="customers.html">
+                    <i class="fas fa-users"></i> Customers
+                </a>
+                <a href="analytics.html" class="active">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <h1>Analytics</h1>
+                </div>
+                <div class="header-actions">
+                    <select id="timeRange" class="select-period">
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">This Year</option>
+                    </select>
+                    <button id="exportData" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+            </header>
+
+            <!-- Analytics Overview -->
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="analytics-header">
+                        <h3>Sales Overview</h3>
+                    </div>
+                    <div class="analytics-content">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="analytics-header">
+                        <h3>Popular Items</h3>
+                    </div>
+                    <div class="analytics-content">
+                        <canvas id="itemsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="analytics-header">
+                        <h3>Customer Growth</h3>
+                    </div>
+                    <div class="analytics-content">
+                        <canvas id="customerChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="analytics-header">
+                        <h3>Order Status Distribution</h3>
+                    </div>
+                    <div class="analytics-content">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Statistics -->
+            <div class="analytics-details">
+                <section class="analytics-section">
+                    <h2>Key Metrics</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <h4>Total Revenue</h4>
+                            <p id="totalRevenue">$0.00</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Average Order Value</h4>
+                            <p id="avgOrderValue">$0.00</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Total Orders</h4>
+                            <p id="totalOrders">0</p>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Customer Satisfaction</h4>
+                            <p id="customerSatisfaction">0%</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/analytics.js"></script>
+</body>
+</html> 

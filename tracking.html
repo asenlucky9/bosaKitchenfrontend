@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bosa Kitchen - Order Tracking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <style>
+        :root {
+            --primary-color: #264653;
+            --secondary-color: #f4a261;
+            --accent-color: #e9c46a;
+            --text-color: #2a2a2a;
+            --light-bg: #f9f9f9;
+            --white: #ffffff;
+            --success: #28a745;
+            --error: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+        }
+
+        .tracking-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .order-header {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .order-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            padding: 0.5rem;
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+
+        .delivery-tracking {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        #delivery-map {
+            height: 400px;
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tracking-info {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .eta {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .rider-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+
+        .rider-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .rider-details h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .contact-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .delivery-status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+
+        .status-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .status-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: var(--white);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary-color);
+        }
+
+        .step.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            .delivery-tracking {
+                grid-template-columns: 1fr;
+            }
+
+            #delivery-map {
+                height: 300px;
+            }
+
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tracking-container">
+        <div class="order-header">
+            <h1>Track Your Order</h1>
+            <div class="order-details">
+                <div class="detail-item">
+                    <strong>Order ID:</strong> #123456
+                </div>
+                <div class="detail-item">
+                    <strong>Status:</strong> Out for Delivery
+                </div>
+                <div class="detail-item">
+                    <strong>Ordered:</strong> <span id="order-time">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="delivery-tracking">
+            <div id="delivery-map"></div>
+            
+            <div class="tracking-info">
+                <div id="eta-display" class="eta">
+                    Estimated arrival in: Calculating...
+                </div>
+
+                <div class="rider-info">
+                    <img src="assets/images/rider-default.jpg" alt="Rider" class="rider-photo">
+                    <div class="rider-details">
+                        <h3>Your Rider</h3>
+                        <p id="rider-name">John Doe</p>
+                        <p id="rider-phone">+1234567890</p>
+                    </div>
+                </div>
+
+                <button class="contact-btn" onclick="contactRider()">
+                    <i class="fas fa-phone"></i>
+                    Contact Rider
+                </button>
+
+                <div class="delivery-status">
+                    <h3>Delivery Status</h3>
+                    <div class="status-steps">
+                        <div class="step active" title="Order Confirmed">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step active" title="Preparing">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="step active" title="Out for Delivery">
+                            <i class="fas fa-motorcycle"></i>
+                        </div>
+                        <div class="step" title="Delivered">
+                            <i class="fas fa-home"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class DeliveryTracker {
+            constructor() {
+                this.map = null;
+                this.riderMarker = null;
+                this.customerMarker = null;
+                this.watchId = null;
+                this.directionsService = null;
+                this.directionsRenderer = null;
+            }
+
+            async initMap(deliveryId) {
+                // Initialize Google Maps
+                this.map = new google.maps.Map(document.getElementById('delivery-map'), {
+                    zoom: 15,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    styles: [
+                        {
+                            featureType: "poi",
+                            elementType: "labels",
+                            stylers: [{ visibility: "off" }]
+                        }
+                    ]
+                });
+
+                this.directionsService = new google.maps.DirectionsService();
+                this.directionsRenderer = new google.maps.DirectionsRenderer({
+                    map: this.map,
+                    suppressMarkers: true
+                });
+
+                // Initialize markers
+                this.riderMarker = new google.maps.Marker({
+                    map: this.map,
+                    icon: {
+                        url: 'assets/images/rider-icon.png',
+                        scaledSize: new google.maps.Size(40, 40)
+                    },
+                    title: 'Delivery Rider'
+                });
+
+                this.customerMarker = new google.maps.Marker({
+                    map: this.map,
+                    icon: {
+                        url: 'assets/images/customer-icon.png',
+                        scaledSize: new google.maps.Size(40, 40)
+                    },
+                    title: 'Delivery Location'
+                });
+
+                // Start tracking
+                await this.startTracking(deliveryId);
+            }
+
+            async startTracking(deliveryId) {
+                // Simulate rider's current position (replace with actual GPS data)
+                const riderPosition = { lat: 40.7128, lng: -74.0060 };
+                const customerPosition = { lat: 40.7580, lng: -73.9855 };
+
+                this.riderMarker.setPosition(riderPosition);
+                this.customerMarker.setPosition(customerPosition);
+                this.map.setCenter(riderPosition);
+
+                // Calculate and display route
+                await this.updateRoute(riderPosition, customerPosition);
+
+                // Simulate real-time updates
+                this.simulateMovement(riderPosition, customerPosition);
+            }
+
+            async updateRoute(origin, destination) {
+                const request = {
+                    origin: origin,
+                    destination: destination,
+                    travelMode: 'DRIVING'
+                };
+
+                try {
+                    const result = await this.directionsService.route(request);
+                    this.directionsRenderer.setDirections(result);
+                    this.updateETA(result);
+                } catch (error) {
+                    console.error('Error calculating route:', error);
+                }
+            }
+
+            updateETA(result) {
+                const duration = result.routes[0].legs[0].duration.text;
+                document.getElementById('eta-display').textContent = 
+                    `Estimated arrival in: ${duration}`;
+            }
+
+            simulateMovement(start, end) {
+                let progress = 0;
+                const step = 0.01;
+
+                const moveMarker = () => {
+                    if (progress <= 1) {
+                        const lat = start.lat + (end.lat - start.lat) * progress;
+                        const lng = start.lng + (end.lng - start.lng) * progress;
+                        const newPosition = { lat, lng };
+
+                        this.riderMarker.setPosition(newPosition);
+                        this.updateRoute(newPosition, end);
+
+                        progress += step;
+                        setTimeout(moveMarker, 1000);
+                    }
+                };
+
+                moveMarker();
+            }
+
+            stopTracking() {
+                if (this.watchId) {
+                    navigator.geolocation.clearWatch(this.watchId);
+                    this.watchId = null;
+                }
+            }
+        }
+
+        // Initialize tracking
+        document.addEventListener('DOMContentLoaded', () => {
+            const tracker = new DeliveryTracker();
+            tracker.initMap('123456');
+
+            // Set order time
+            const orderTime = new Date();
+            orderTime.setMinutes(orderTime.getMinutes() - 30);
+            document.getElementById('order-time').textContent = 
+                orderTime.toLocaleTimeString();
+        });
+
+        // Contact rider function
+        function contactRider() {
+            const phone = document.getElementById('rider-phone').textContent;
+            window.location.href = `tel:${phone}`;
+        }
+    </script>
+</body>
+</html> 
