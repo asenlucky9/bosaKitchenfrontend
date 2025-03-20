@@ -1,0 +1,3 @@
+[submodule "bosaKitchenfrontend"]
+	path = bosaKitchenfrontend
+	url = https://github.com/asenlucky9/bosaKitchenfrontend.git
